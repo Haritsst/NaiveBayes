@@ -18,24 +18,35 @@ st.set_page_config(
 )
 
 @st.cache_data
+@st.cache_data
 def load_data():
     df = pd.read_csv("heart_attack_prediction_dataset.csv")
 
+    # Drop kolom tidak relevan
     cols_to_drop = ['Patient ID', 'Country', 'Continent', 'Hemisphere']
     df.drop(columns=[col for col in cols_to_drop if col in df.columns], inplace=True)
 
+    # Pisahkan tekanan darah
     df[['Systolic_BP', 'Diastolic_BP']] = df['Blood Pressure'].str.split('/', expand=True).astype(int)
     df.drop('Blood Pressure', axis=1, inplace=True)
 
+    # Drop missing values
     df.dropna(inplace=True)
 
+    # Konversi kategorikal ke numerik (get_dummies tanpa drop_first)
     df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=False)
 
-    for col in ['Sex_Male', 'Sex_Female', 'Diet_Vegetarian', 'Diet_Non-Vegetarian']:
+    # Pastikan kolom dummy selalu tersedia
+    expected_dummies = ['Sex_Male', 'Sex_Female', 'Diet_Vegetarian', 'Diet_Non-Vegetarian']
+    for col in expected_dummies:
         if col not in df.columns:
             df[col] = 0
 
+    # Ubah semua kolom jadi numerik kalau belum
+    df = df.apply(pd.to_numeric, errors='coerce')
+
     return df
+
 
 @st.cache_resource
 def load_model_and_scaler():
