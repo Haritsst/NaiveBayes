@@ -44,9 +44,9 @@ def load_model_and_scaler():
     y = df['Heart Attack Risk']
     ros = RandomOverSampler(random_state=42)
     if X.isnull().any().any():
-    raise ValueError("X contains NaN values")
+        raise ValueError("X contains NaN values")
     if not np.all([np.issubdtype(dt, np.number) for dt in X.dtypes]):
-    raise ValueError("X contains non-numeric columns")
+        raise ValueError("X contains non-numeric columns")
     X_resampled, y_resampled = ros.fit_resample(X, y)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_resampled)
