@@ -52,11 +52,18 @@ def load_model_and_scaler():
     df = load_data()
     X = df.drop('Heart Attack Risk', axis=1)
     y = df['Heart Attack Risk']
-    ros = RandomOverSampler(random_state=42)
-    if X.isnull().any().any():
-        raise ValueError("X contains NaN values")
-    if not np.all([np.issubdtype(dt, np.number) for dt in X.dtypes]):
+
+    # ✅ Tambahkan debug info di sini
+    st.write("X columns & dtypes:", X.dtypes)
+    st.write("Apakah ada NaN di X?", X.isnull().any().any())
+
+    # Validasi tambahan (opsional)
+    non_numeric_cols = X.dtypes[~X.dtypes.apply(np.issubdtype, args=(np.number,))]
+    if not non_numeric_cols.empty:
+        st.write("Kolom non-numeric:", non_numeric_cols)
         raise ValueError("X contains non-numeric columns")
+
+    ros = RandomOverSampler(random_state=42)
     X_resampled, y_resampled = ros.fit_resample(X, y)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_resampled)
