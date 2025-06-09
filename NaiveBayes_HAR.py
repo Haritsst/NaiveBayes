@@ -18,15 +18,23 @@ st.set_page_config(
 )
 
 @st.cache_data
-
 def load_data():
     df = pd.read_csv("heart_attack_prediction_dataset.csv")
+
     cols_to_drop = ['Patient ID', 'Country', 'Continent', 'Hemisphere']
     df.drop(columns=[col for col in cols_to_drop if col in df.columns], inplace=True)
-    df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=True)
+
     df[['Systolic_BP', 'Diastolic_BP']] = df['Blood Pressure'].str.split('/', expand=True).astype(int)
     df.drop('Blood Pressure', axis=1, inplace=True)
+
     df.dropna(inplace=True)
+
+    df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=False)
+
+    for col in ['Sex_Male', 'Sex_Female', 'Diet_Vegetarian', 'Diet_Non-Vegetarian']:
+        if col not in df.columns:
+            df[col] = 0
+
     return df
 
 @st.cache_resource
@@ -35,6 +43,10 @@ def load_model_and_scaler():
     X = df.drop('Heart Attack Risk', axis=1)
     y = df['Heart Attack Risk']
     ros = RandomOverSampler(random_state=42)
+    if X.isnull().any().any():
+    raise ValueError("X contains NaN values")
+    if not np.all([np.issubdtype(dt, np.number) for dt in X.dtypes]):
+    raise ValueError("X contains non-numeric columns")
     X_resampled, y_resampled = ros.fit_resample(X, y)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_resampled)
