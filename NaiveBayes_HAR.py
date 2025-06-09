@@ -22,9 +22,7 @@ def load_data():
     df = pd.read_csv("heart_attack_prediction_dataset.csv")
 
     # Drop kolom tidak relevan
-    cols_to_drop = ['Patient ID', 'Exercise Hours Per Week', 'Previous Heart Problems', 'Medication Use',
-                    'Stress Level', 'Sedentary Hours Per Day', 'Income', 'BMI',
-                    'Physical Activity Days Per Week', 'Country', 'Continent', 'Hemisphere']
+    cols_to_drop = ['Patient ID', 'Country', 'Continent', 'Hemisphere']
     df.drop(columns=[col for col in cols_to_drop if col in df.columns], inplace=True)
 
     # Pisahkan tekanan darah
