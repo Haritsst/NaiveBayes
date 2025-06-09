@@ -18,15 +18,21 @@ st.set_page_config(
 )
 
 @st.cache_data
-
 def load_data():
     df = pd.read_csv("heart_attack_prediction_dataset.csv")
     cols_to_drop = ['Patient ID', 'Country', 'Continent', 'Hemisphere']
     df.drop(columns=[col for col in cols_to_drop if col in df.columns], inplace=True)
-    df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=True)
     df[['Systolic_BP', 'Diastolic_BP']] = df['Blood Pressure'].str.split('/', expand=True).astype(int)
     df.drop('Blood Pressure', axis=1, inplace=True)
     df.dropna(inplace=True)
+
+    df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=False)
+
+    # Pastikan kolom dummy selalu ada
+    for col in ['Sex_Male', 'Diet_Vegetarian']:
+        if col not in df.columns:
+            df[col] = 0
+
     return df
 
 @st.cache_resource
