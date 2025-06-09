@@ -9,7 +9,6 @@ import plotly.graph_objects as go
 from sklearn.metrics import roc_curve, auc
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
-from imblearn.over_sampling import RandomOverSampler
 
 st.set_page_config(
     page_title="Prediksi Risiko Serangan Jantung",
@@ -61,8 +60,7 @@ def load_model_and_scaler():
         st.write("Kolom non-numeric:", non_numeric_cols)
         raise ValueError("X contains non-numeric columns")
 
-    ros = RandomOverSampler(random_state=42)
-    X_resampled, y_resampled = ros.fit_resample(X, y)
+    X_resampled, y_resampled = X, y
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_resampled)
     model = GaussianNB()
