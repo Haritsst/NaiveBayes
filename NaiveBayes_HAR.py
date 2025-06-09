@@ -21,26 +21,28 @@ st.set_page_config(
 def load_data():
     df = pd.read_csv("heart_attack_prediction_dataset.csv")
 
+    # Drop kolom non-fitur
     cols_to_drop = ['Patient ID', 'Country', 'Continent', 'Hemisphere']
-    df.drop(columns=[col for col in cols_to_drop if col in df.columns], inplace=True)
+    df.drop(columns=cols_to_drop, inplace=True)
 
+    # Pecah tekanan darah ke dua kolom numerik
     df[['Systolic_BP', 'Diastolic_BP']] = df['Blood Pressure'].str.split('/', expand=True).astype(int)
-    df.drop('Blood Pressure', axis=1, inplace=True)
+    df.drop(columns=['Blood Pressure'], inplace=True)
 
-    df.dropna(inplace=True)
-
+    # Buat kolom dummy dari kolom kategorikal
     df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=False)
 
-    # Tambahkan kolom dummy jika tidak muncul
+    # Pastikan semua kolom dummy yang mungkin selalu ada
     expected_dummies = ['Sex_Female', 'Sex_Male', 'Diet_Average', 'Diet_Healthy', 'Diet_Unhealthy']
     for col in expected_dummies:
         if col not in df.columns:
             df[col] = 0
 
-    # ✅ KONVERSI semua kolom ke numerik eksplisit
+    # Konversi semua kolom bool jadi int (dummy biasanya bool)
     df = df.astype({col: 'int' for col in df.columns if df[col].dtype == 'bool'})
 
     return df
+
 
 
 @st.cache_resource
