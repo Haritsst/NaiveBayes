@@ -21,28 +21,24 @@ st.set_page_config(
 def load_data():
     df = pd.read_csv("heart_attack_prediction_dataset.csv")
 
-    # Drop kolom tidak relevan
     cols_to_drop = ['Patient ID', 'Country', 'Continent', 'Hemisphere']
     df.drop(columns=[col for col in cols_to_drop if col in df.columns], inplace=True)
 
-    # Pisahkan tekanan darah
     df[['Systolic_BP', 'Diastolic_BP']] = df['Blood Pressure'].str.split('/', expand=True).astype(int)
     df.drop('Blood Pressure', axis=1, inplace=True)
 
-    # Drop missing values
     df.dropna(inplace=True)
 
-    # Konversi kategorikal ke numerik (get_dummies tanpa drop_first)
     df = pd.get_dummies(df, columns=['Sex', 'Diet'], drop_first=False)
 
-    # Pastikan kolom dummy selalu tersedia
-    expected_dummies = ['Sex_Male', 'Sex_Female', 'Diet_Vegetarian', 'Diet_Non-Vegetarian']
+    # Tambahkan kolom dummy jika tidak muncul
+    expected_dummies = ['Sex_Female', 'Sex_Male', 'Diet_Average', 'Diet_Healthy', 'Diet_Unhealthy']
     for col in expected_dummies:
         if col not in df.columns:
             df[col] = 0
 
-    # Ubah semua kolom jadi numerik kalau belum
-    df = df.apply(pd.to_numeric, errors='coerce')
+    # ✅ KONVERSI semua kolom ke numerik eksplisit
+    df = df.astype({col: 'int' for col in df.columns if df[col].dtype == 'bool'})
 
     return df
 
