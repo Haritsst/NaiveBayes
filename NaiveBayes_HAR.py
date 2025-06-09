@@ -34,20 +34,10 @@ def load_model_and_scaler():
     df = load_data()
     X = df.drop('Heart Attack Risk', axis=1)
     y = df['Heart Attack Risk']
-
-    # Pastikan semua nilai numerik
-    X = X.select_dtypes(include=[np.number])
-
-    # Pastikan tidak ada NaN
-    if X.isnull().any().any():
-        X = X.fillna(0)  # atau pakai imputasi lain
-
     ros = RandomOverSampler(random_state=42)
     X_resampled, y_resampled = ros.fit_resample(X, y)
-
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_resampled)
-
     model = GaussianNB()
     model.fit(X_scaled, y_resampled)
     return model, scaler, X, y
