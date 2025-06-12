@@ -50,9 +50,7 @@ def load_model_and_scaler():
     X = df.drop('Heart Attack Risk', axis=1)
     y = df['Heart Attack Risk']
 
-    # ✅ Tambahkan debug info di sini
-    st.write("X columns & dtypes:", X.dtypes)
-    st.write("Apakah ada NaN di X?", X.isnull().any().any())
+    
 
     # Validasi tambahan (opsional)
     non_numeric_cols = X.dtypes[~X.dtypes.apply(np.issubdtype, args=(np.number,))]
