@@ -138,7 +138,6 @@ input_data = pd.DataFrame([{
     'Cholesterol Level': chol,
     'Smoking': 1 if smoker == 'Yes' else 0,
     'Alcohol Consumption': 1 if alcohol == 'Yes' else 0,
-    'Sex_Male': 1 if sex == 'Male' else 0,
     'Diet_Vegetarian': 1 if diet == 'Vegetarian' else 0,
     'Systolic_BP': systolic,
     'Diastolic_BP': diastolic
