@@ -131,7 +131,6 @@ systolic = st.slider("Systolic BP", 90, 200, 120)
 diastolic = st.slider("Diastolic BP", 60, 140, 80)
 smoker = st.selectbox("Do you smoke?", ['Yes', 'No'])
 alcohol = st.selectbox("Do you consume alcohol?", ['Yes', 'No'])
-sex = st.selectbox("Sex", ['Male', 'Female'])
 diet = st.selectbox("Diet Type", ['Vegetarian', 'Non-Vegetarian'])
 
 input_data = pd.DataFrame([{
