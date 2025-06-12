@@ -9,9 +9,7 @@ import plotly.graph_objects as go
 from sklearn.metrics import roc_curve, auc
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_curve, auc, confusion_matrix, accuracy_score
-from sklearn.naive_bayes import GaussianNB
-from sklearn.preprocessing import StandardScaler
+
 
 st.set_page_config(
     page_title="Prediksi Risiko Serangan Jantung",
@@ -80,29 +78,6 @@ def plot_roc_curve(model, X, y, scaler):
     fig.update_layout(title='Kurva ROC', xaxis_title='False Positive Rate', yaxis_title='True Positive Rate')
     return fig
 
-def plot_confusion_matrix(model, X, y, scaler):
-    X_scaled = scaler.transform(X)
-    y_pred = model.predict(X_scaled)
-    cm = confusion_matrix(y, y_pred)
-    acc = accuracy_score(y, y_pred)
-    
-    # Membuat heatmap dengan Plotly
-    fig = go.Figure(data=go.Heatmap(
-        z=cm,
-        x=['Prediksi Risiko Rendah', 'Prediksi Risiko Tinggi'],
-        y=['Aktual Risiko Rendah', 'Aktual Risiko Tinggi'],
-        hoverongaps=False,
-        text=[[str(val) for val in row] for row in cm],
-        texttemplate="%{text}",
-        colorscale='Blues'
-    ))
-    
-    fig.update_layout(
-        title_text='Confusion Matrix',
-        xaxis_title="Label Prediksi",
-        yaxis_title="Label Sebenarnya"
-    )
-    return fig, acc
 
 def get_recommendation(prediction, prob):
     if prediction == 1:
