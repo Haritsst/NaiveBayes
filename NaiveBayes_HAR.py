@@ -78,7 +78,7 @@ def plot_roc_curve(model, X, y, scaler):
     fig.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name=f"AUC = {roc_auc:.2f}", line=dict(color='crimson')))
     fig.add_trace(go.Scatter(x=[0,1], y=[0,1], mode='lines', name='Random', line=dict(dash='dash')))
     fig.update_layout(title='Kurva ROC', xaxis_title='False Positive Rate', yaxis_title='True Positive Rate')
-    
+    return fig
 
 def plot_confusion_matrix(model, X, y, scaler):
     X_scaled = scaler.transform(X)
